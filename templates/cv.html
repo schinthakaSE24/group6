@@ -1,0 +1,106 @@
+{% extends "base.html"%}
+{%block content%}
+<style>
+   
+ 
+    nav .navbar-brand.logo {
+     color: #222;
+   }
+   nav.navbar ul.navbar-nav li.nav-item a.active {
+        color: #ef6108 !important;
+      }
+      nav.navbar .nav-item {
+        padding: 0 13px 0 13px;
+        font-family: "Raleway", sans-serif;
+        color: #222;
+      }
+      
+      nav.navbar ul.navbar-nav li.nav-item a.nav-link {
+        font-size: 12px;
+        font-weight: 500;
+        color: #222;
+        padding: 0;
+        position: relative;
+        text-transform: uppercase;
+      }
+   </style>
+  <header class="header-content">
+    <nav class="navbar navbar-expand-lg navbar-light">
+       <div class="container">
+       
+         <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="25" height="24" class="nav-logo"> -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-expanded="false" aria-controls="navbarCollapse" aria-label="Toggle Navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+             <ul class="navbar-nav main">
+                <li class="nav-item">
+                   <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                   <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ url_for('upload_file') }}" class="nav-link active ">GET Ranked Cvs</a>
+               </li>
+                
+                <li class="nav-item">
+                 <a href="{{ url_for('Myprofile') }}" class="nav-link ">MyProfile</a>
+              </li>
+             </ul>
+          </div>
+       </div>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <h2> CV ranking</h2>
+ 
+        <form method=post enctype=multipart/form-data>
+          <h4>Upload Resumes</h4><br>
+          <input type=file name=file multiple>
+          <input type=submit value=Upload>
+        </form>
+        <br/>
+        {%- if files %}
+        <h4>Uploaded Resumes</h4>
+       
+        <ul>
+        {%- for code, file in files.items() %}
+            <li><a href="/download/{{ code }}">{{ file }}</a></li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+       
+      <form method="POST" action="/process">
+        <div class="form-group">
+                <label>Enter Your Job Description</label>
+        <textarea type="text" rows="5" cols="5" class="form-control"  name="rawtext" required="true">   </textarea>
+        <br/>
+     <br/>
+        <button type="reset" class="btn btn-primary"><i class="fa fa-eraser"></i> Clear</button>
+        <button type="submit" class="btn btn-info"><i class="fa fa-database"></i> Submit</button>
+     
+     </div>
+     </form>
+     </div>
+     
+     <div class="container">
+     <div class="alert alert-success" role="alert">
+     <p class="alert-heading">Result</p>
+     <a href="{{ url_for('process', filename="Candidates.csv" )}}">Candidates</a>
+     </div>
+     </div>
+     
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+            
+
+ 
+
+{% endblock content%}
+
+
+
+

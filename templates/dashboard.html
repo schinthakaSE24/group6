@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<style>
+   
+ 
+   nav .navbar-brand.logo {
+    color: #222;
+  }
+  nav.navbar ul.navbar-nav li.nav-item a.active {
+       color: #ef6108 !important;
+     }
+     nav.navbar .nav-item {
+       padding: 0 13px 0 13px;
+       font-family: "Raleway", sans-serif;
+       color: #222;
+     }
+     
+     nav.navbar ul.navbar-nav li.nav-item a.nav-link {
+       font-size: 12px;
+       font-weight: 500;
+       color: #222;
+       padding: 0;
+       position: relative;
+       text-transform: uppercase;
+     }
+  </style>
+ <header class="header-content">
+   <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+       <a class="navbar-brand logo" href="#">Employee recruiter</a>
+        <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="25" height="24" class="nav-logo"> -->
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-expanded="false" aria-controls="navbarCollapse" aria-label="Toggle Navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav main">
+               <li class="nav-item">
+                  <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+               </li>
+               <li class="nav-item">
+                  <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+               </li>
+               <li class="nav-item">
+                 <a href="{{ url_for('profiles') }}" class="nav-link ">Profiles</a>
+              </li>
+               
+               <li class="nav-item">
+                <a href="{{ url_for('Myprofile') }}" class="nav-link ">MyProfile</a>
+             </li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+ </header>
+ <h2>hello {{current_user.username}}</h2>
+ 
+
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html"%}
+{%block content%}
+
+<style>
+   
+ 
+  nav .navbar-brand.logo {
+   color: #222;
+ }
+ nav.navbar ul.navbar-nav li.nav-item a.active {
+      color: #ef6108 !important;
+    }
+    nav.navbar .nav-item {
+      padding: 0 13px 0 13px;
+      font-family: "Raleway", sans-serif;
+      color: #222;
+    }
+    
+    nav.navbar ul.navbar-nav li.nav-item a.nav-link {
+      font-size: 12px;
+      font-weight: 500;
+      color: #222;
+      padding: 0;
+      position: relative;
+      text-transform: uppercase;
+    }
+ </style>
+
+ <!-- Example split danger button -->
+
+<header class="header-content">
+  <nav class="navbar navbar-expand-lg navbar-light">
+     <div class="container">
+      <a class="navbar-brand logo" href="#">Employee recruiter</a>
+       <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="25" height="24" class="nav-logo"> -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-expanded="false" aria-controls="navbarCollapse" aria-label="Toggle Navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+           <ul class="navbar-nav main">
+              <li class="nav-item">
+                 <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                 <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+              </li>
+              
+              <li class="nav-item">
+               <a href="{{ url_for('Myprofile') }}" class="nav-link ">MyProfile</a>
+            </li>
+          </li>
+          <li class="nav-item">
+           <a href="{{ url_for('profiles') }}" class="nav-link active">Profiles</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('logincom') }}" class="nav-link ">GET Ranked Cvs</a>
+       </li>
+
+       </ul>
+           
+        </div>
+     </div>
+  </nav>
+</header>
+{% for user in users %}
+
+      
+
+
+<div class="card" style="margin:50px; padding: 50px;">
+    <div class="card-header">
+      <a href="{{ url_for('view') }}" class="nav-link active"><b>View profile to get more details</b></a>
+      
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"></h5>
+ 
+      <img class="rounded-circle account-img" src= "static\profilepic\{{user.image_file}}">
+   
+      <h4>I am {{user.username}}</h4> 
+    
+   
+    <ol>
+     User Id: {{user.id}}<br>
+     Username: {{user.username}}<br>
+     User email address:{{user.email}}<br>
+   
+     </ol>  
+     
+      <a href= "{{url_for('view')}}" class="btn btn-primary">View CV</a>
+    
+    </div>
+</div>
+
+
+{% endfor %}
+{% endblock content%}
+C:\Users\User\Desktop\Resume_Screening_Project-main\gr6\static\profilepic\1cfc91f690f00708.jpg
+
