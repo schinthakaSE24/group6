@@ -14,10 +14,11 @@ import json
 from logging import PlaceHolder
 from queue import Empty
 import secrets
+import sqlite3
 from tkinter.tix import Form
 from tokenize import String
 from unittest import result
-from flask import Flask, render_template, redirect, url_for, request,send_file
+from flask import Flask, render_template, redirect, url_for, request,send_file,session
 from flask_bootstrap import Bootstrap
 from flask import flash
 import unicodedata
@@ -69,7 +70,6 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15),unique=True)
     email = db.Column(db.String(50),unique=True)
-    usertype = db.Column(db.String(50),unique=True)
     password = db.Column(db.String(80))
     companyname = db.Column(db.String(50),unique=True)
     companyemail = db.Column(db.String(50),unique=True)
@@ -77,15 +77,14 @@ class User(UserMixin, db.Model):
     image_file = db.Column(db.String(20), nullable=False, default="download.jpg")
     companyname = db.Column(db.String(50),unique=True)
     companyemail = db.Column(db.String(50),unique=True)
-    cv=db.relationship('Cv', backref='user')
-
+   
 class Cv(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username= db.Column(db.String(150),unique=True)
     cvemail = db.Column(db.String(150),unique=True)
     cvname = db.Column(db.String(50),unique=True)
     phonenumber = db.Column(db.String(14),unique=True)
-    userid = db.Column(db.Integer,db.ForeignKey('user.id'),unique=True)
+    
     
     
 def __repr__(self):
@@ -203,7 +202,7 @@ def signcom():
     
         user = User.query.filter_by(companyname=companyname).first() or User.query.filter_by(companyemail=companyemail).first() or User.query.filter_by(email=email).first()   
         if not user:
-            cuser = User(username=form.username.data,email=form.email.data,usertype=form.usertype.data,password=hashed_password,companyname=form.companyname.data,companyemail=form.companyemail.data)
+            cuser = User(username=form.username.data,email=form.email.data,password=hashed_password,companyname=form.companyname.data,companyemail=form.companyemail.data)
             db.session.add(cuser)
             db.session.commit() 
             return redirect(url_for('logincom'))
@@ -264,7 +263,7 @@ def dashboards():
         datas = []
         datas.append(final_data)
 
-        flash("File uploaded successfully")
+        
       #  return redirect(url_for('dashboard'))
 
       # Turn a Unicode string to plain ASCII, --> https://stackoverflow.com/a/518232/2809427
@@ -307,9 +306,16 @@ def dashboards():
         cvmail = data.get("email")
         cvapplicant_name = data.get("name")
         phonenumber = data.get("mobile_number")
-        cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name or "none",phonenumber=phonenumber or "none")
-        db.session.add(cvuser)
-        db.session.commit()
+        
+        ccuser = Cv.query.filter_by(cvemail=cvmail).first() or Cv.query.filter_by(username=name).first()
+        if not ccuser:
+            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber)
+            db.session.add(cvuser)
+            db.session.commit()
+            flash('File uploaded Successfully')
+        else:
+            flash("File Already uploaded one,Try again later")
+        
         data = str(data)
         cleaned = clean_text(data)
         prediction = rf_clf.predict([cleaned])
@@ -408,12 +414,17 @@ def search():
         return render_template("search.html")
 
 
-@app.route('/view_pdf')
+@app.route('/view_pdf',methods=["GET", "POST"])
 @login_required
 def view():
-    cvusers = Cv.query.all()
     
-    return render_template("pdf.html", cvusers=cvusers)
+ 
+  
+    return render_template("pdf.html")
+
+    
+    
+   
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/resumes/')
 DOWNLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/outputs/')
