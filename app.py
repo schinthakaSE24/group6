@@ -335,12 +335,19 @@ def logout():
     return redirect(url_for('index'))
 
 
-
+ROWS_PER_PAGE = 4
 @app.route('/profiles')
 def profiles():
     users = User.query.all()
 
     usernames = User.query.order_by(User.username).all()
+
+
+
+   
+    page = request.args.get('page', 1, type=int)
+
+    users = User.query.paginate(page=page, per_page=ROWS_PER_PAGE) 
     
     return render_template('profile.html',users=users,usernames=usernames)
 
