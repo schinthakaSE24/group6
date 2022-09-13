@@ -77,6 +77,7 @@ class User(UserMixin, db.Model):
     image_file = db.Column(db.String(20), nullable=False, default="download.jpg")
     companyname = db.Column(db.String(50),unique=True)
     companyemail = db.Column(db.String(50),unique=True)
+    phonenumber = db.Column(db.String(50),unique=True)
    
 class Cv(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -362,7 +363,6 @@ class UpdateAccountForm(FlaskForm):
     username = StringField('Username',validators=[DataRequired()])
     email = StringField("email",validators=[DataRequired()])
     picture = FileField("update profile picture",validators=[FileAllowed(['jpg','png'])])
-    address = StringField('Address',validators=[DataRequired()])
     phonenumber = StringField('Phonenumbers',validators=[DataRequired()])
     submit = SubmitField('update')
 
@@ -375,6 +375,11 @@ def validate_username(self, username):
 def validate_email(self, email):
     if email.data != current_user.email:
         user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
+def validate_phonenumber(self, phonenumber):
+    if phonenumber.data != current_user.phonenumber:
+        user = User.query.filter_by(phonenumber=phonenumber.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
 def save_picture(form_picture):
@@ -401,12 +406,14 @@ def profileupdate():
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.phonenumber = form.phonenumber.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('Myprofile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.phonenumber.data = current_user.phonenumber
     image_file = url_for('static', filename='profilepic/' + str(current_user.image_file))
     return render_template('update.html',
                            image_file=image_file, form=form)
@@ -424,8 +431,8 @@ def search():
 @app.route('/view_pdf',methods=["GET", "POST"])
 @login_required
 def view():
-    
- 
+   
+
   
     return render_template("pdf.html")
 
