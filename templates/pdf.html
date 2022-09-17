@@ -48,9 +48,7 @@ profile page
                 <a href="{{ url_for('profiles') }}" class="nav-link ">Profiles</a>
              </li>
               
-              <li class="nav-item">
-               <a href="{{ url_for('Myprofile') }}" class="nav-link active">MyProfile</a>
-            </li>
+              
            </ul>
         </div>
      </div>
@@ -66,7 +64,7 @@ profile page
                 <div class="d-flex flex-column align-items-center text-center">
                  
                   <div class="mt-3">
-                    <h4>{{current_user.username}}</h4>
+                    <h4>{{user.username}}</h4>
                     <p class="text-secondary mb-1">Full Stack Developer</p>
                   
                     <button class="btn btn-outline-primary">Message</button>
@@ -107,7 +105,7 @@ profile page
                     <h6 class="mb-0">Full Name</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                   {{current_user.username}}
+                   {{user.username}}
                   </div>
                 </div>
                 <hr>
@@ -116,7 +114,7 @@ profile page
                     <h6 class="mb-0">Email</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                    {{current_user.email}}
+                    {{user.email}}
                   </div>
                 </div>
                 <hr>
@@ -125,18 +123,14 @@ profile page
                     <h6 class="mb-0">Phone</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                    {{current_user.phonenumber}}
+                    {{user.phonenumber}}
                   </div>
                 </div>
              
                
                
                 <hr>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <a class="btn btn-info " target="__blank" a href="{{ url_for('profileupdate') }}" >Edit</a>
-                  </div>
-                </div>
+               
               </div>
             </div>
 
@@ -145,25 +139,33 @@ profile page
                 <div class="card h-100">
                   <div class="card-body">
                     <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">Analyzed</i>Resume Status</h6>
-                    <small>Web Design</small>
+                    <small>Email:</small>
                     <div class="mb-0" style="height: 5px">
-                      
+                      {{cuser.cvemail}}
                     </div>
-                    <small>Website Markup</small>
+                    <br>
+                    <br>
+                    <small>Username:</small>
                     <div class="mb-3" style="height: 5px">
-                      
+                     {{cuser.cvname}}
                     </div>
-                    <small>One Page</small>
+                    <br>
+                    <small>Mobile Number:</small>
                     <div class="mb-3" style="height: 5px">
-                     
+                      {{cuser.phonenumber}}
                     </div>
-                    <small>Mobile Template</small>
+                    <br>
+                    <small>Skillls:</small>
                     <div class="mb-3" style="height: 5px">
-                      
+                      {{cuser.skills}}
                     </div>
-                    <small>Backend API</small>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <small>Experience:</small>
                     <div class="mb-3" style="height: 5px">
-                      
+                      {{cuser.experience}}
                     </div>
                   </div>
                 </div>

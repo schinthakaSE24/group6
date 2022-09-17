@@ -166,7 +166,7 @@ def logincom():
     return render_template('logincom.html', form=form)
 
 @app.route('/signup', methods=['GET', 'POST'])
-def signup():
+def signup():   
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -314,7 +314,7 @@ def dashboards():
         skills = data.get("skills")
         degree = data.get("degree")
         experience = data.get("total_experience")
-        skillss = ''.join(map(str,skills))
+        skillss = ','.join(map(str,skills))
         
         ccuser = Cv.query.filter_by(cvemail=cvmail).first() or Cv.query.filter_by(username=name).first()
         if not ccuser:
@@ -368,6 +368,7 @@ def profiles():
 @app.route('/Myprofile',methods=['GET', 'POST'])
 @login_required
 def Myprofile():
+    
     imagefile = url_for('static', filename='profilepic/' + str(current_user.image_file))
     return render_template('Myprofile.html', imagefile=imagefile)
 
@@ -450,13 +451,15 @@ def search():
         return render_template("search.html")
 
 
-@app.route('/view_pdf',methods=["GET", "POST"])
+@app.route('/profiles/<username>',methods=["GET", "POST"])
 @login_required
-def view():
+def view(username):
+    user= User.query.filter_by(username=username).first()
+    cuser= Cv.query.filter_by(username=username).first()
    
 
   
-    return render_template("pdf.html")
+    return render_template("pdf.html",user=user,cuser=cuser)
 @app.route('/info/<username>')
 def info(username):
     user= User.query.filter_by(username=username).first()
