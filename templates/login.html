@@ -117,6 +117,13 @@ Login
 
         <button class="w-100 btn btn-lg btn-primary mt-10 sign-btn" type="submit">Sign in</button>
       </form>
+      {% with messages = get_flashed_messages() %}
+{% if messages %}
+       {% for message in messages %}
+          {{ message }}
+       {% endfor %}
+  {% endif %}
+ {% endwith %}
       <p class="text-center pt-10">Don't have an account? Please <a href="{{ url_for('signup') }}">register</a> here.</p>
 </div>
 

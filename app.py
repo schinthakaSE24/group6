@@ -73,11 +73,11 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     companyname = db.Column(db.String(50),unique=True)
     companyemail = db.Column(db.String(50),unique=True)
-    DateTime = datetime.now()
     image_file = db.Column(db.String(20), nullable=False, default="download.jpg")
     companyname = db.Column(db.String(50),unique=True)
     companyemail = db.Column(db.String(50),unique=True)
     phonenumber = db.Column(db.String(50),unique=True)
+    address = db.Column(db.String(50),unique=True)
    
 class Cv(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,6 +85,9 @@ class Cv(UserMixin, db.Model):
     cvemail = db.Column(db.String(150),unique=True)
     cvname = db.Column(db.String(50),unique=True)
     phonenumber = db.Column(db.String(14),unique=True)
+    skills = db.Column(db.String(),unique=True)
+    degree = db.Column(db.String(),unique=True)
+    experience =db.Column(db.String(),unique=True)
     
     
     
@@ -124,6 +127,7 @@ class RegisterForm(FlaskForm):
 
 @app.route('/')
 def index():
+   
     return render_template('index.html')
 
 
@@ -146,20 +150,20 @@ def login():
     return render_template('login.html', form=form)
 @app.route('/logincompany', methods=['GET', 'POST'])
 def logincom():
-    form1 = LoginFormcom()
+    form = LoginFormcom()
  
-    if form1.validate_on_submit():
-        cuser = User.query.filter_by(companyemail=form1.companyemail.data).first()
+    if form.validate_on_submit():
+        cuser = User.query.filter_by(companyemail=form.companyemail.data).first()
         if cuser:
-            if check_password_hash(cuser.password, form1.password.data):
-                login_user(cuser, remember=form1.remember.data)
+            if check_password_hash(cuser.password, form.password.data):
+                login_user(cuser, remember=form.remember.data)
                 return redirect(url_for('cv'))
            
         flash("Invalid username or password", 'danger')
         return redirect(url_for('logincom'))
         
 
-    return render_template('logincom.html', form=form1)
+    return render_template('logincom.html', form=form)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -307,10 +311,14 @@ def dashboards():
         cvmail = data.get("email")
         cvapplicant_name = data.get("name")
         phonenumber = data.get("mobile_number")
+        skills = data.get("skills")
+        degree = data.get("degree")
+        experience = data.get("total_experience")
+        skillss = ''.join(map(str,skills))
         
         ccuser = Cv.query.filter_by(cvemail=cvmail).first() or Cv.query.filter_by(username=name).first()
         if not ccuser:
-            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber)
+            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber,degree=degree, skills=skillss,experience=experience)
             db.session.add(cvuser)
             db.session.commit()
             flash('File uploaded Successfully')
@@ -335,14 +343,18 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/profile/<username>')
+def pro(username):
+    username="nuwan"
+   
+    return render_template('search.html', username=username)
+
 
 ROWS_PER_PAGE = 4
 @app.route('/profiles')
 def profiles():
     users = User.query.all()
-
-    usernames = User.query.order_by(User.username).all()
-
+ 
 
 
    
@@ -350,7 +362,7 @@ def profiles():
 
     users = User.query.paginate(page=page, per_page=ROWS_PER_PAGE) 
     
-    return render_template('profile.html',users=users,usernames=usernames)
+    return render_template('profile.html',users=users)
 
 
 @app.route('/Myprofile',methods=['GET', 'POST'])
@@ -363,6 +375,7 @@ class UpdateAccountForm(FlaskForm):
     username = StringField('Username',validators=[DataRequired()])
     email = StringField("email",validators=[DataRequired()])
     picture = FileField("update profile picture",validators=[FileAllowed(['jpg','png'])])
+    address = StringField('address',validators=[DataRequired()])
     phonenumber = StringField('Phonenumbers',validators=[DataRequired()])
     submit = SubmitField('update')
 
@@ -380,6 +393,11 @@ def validate_email(self, email):
 def validate_phonenumber(self, phonenumber):
     if phonenumber.data != current_user.phonenumber:
         user = User.query.filter_by(phonenumber=phonenumber.data).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
+def validate_address(self, address):
+    if address.data != current_user.address:
+        user = User.query.filter_by(address=address.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
 def save_picture(form_picture):
@@ -407,6 +425,8 @@ def profileupdate():
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.phonenumber = form.phonenumber.data
+        current_user.address = form.address.data
+
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('Myprofile'))
@@ -414,6 +434,8 @@ def profileupdate():
         form.username.data = current_user.username
         form.email.data = current_user.email
         form.phonenumber.data = current_user.phonenumber
+        form.address.data = current_user.address
+
     image_file = url_for('static', filename='profilepic/' + str(current_user.image_file))
     return render_template('update.html',
                            image_file=image_file, form=form)
@@ -435,9 +457,16 @@ def view():
 
   
     return render_template("pdf.html")
-
+@app.route('/info/<username>')
+def info(username):
+    user= User.query.filter_by(username=username).first()
+    cuser= Cv.query.filter_by(username=username).first()
+    return render_template('info.html', user=user,cuser=cuser)
     
-    
+@app.route('/info')
+def infov():
+    users = User.query.all()
+    return render_template('name.html', users=users)   
    
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/resumes/')
