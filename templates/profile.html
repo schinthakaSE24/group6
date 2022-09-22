@@ -30,27 +30,48 @@
 
 <header class="header-content">
   <nav class="navbar navbar-expand-lg navbar-light">
+   
      <div class="container">
       <a class="navbar-brand logo" href="#">Employee recruiter</a>
+     
        <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="25" height="24" class="nav-logo"> -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-expanded="false" aria-controls="navbarCollapse" aria-label="Toggle Navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="stikers " style="padding:10px; margin-left:150px;">
+            <img src="static\img\recruitment.png" width="45px" height="45px">
+            <img src="static\img\headhunting.png" width="45px" height="45px">
+            <img src="static\img\recruitment(1).png" width="45px" height="45px">
+            <img src="static\img\recruitment(2).png" width="45px" height="45px">
+            </div>
            <ul class="navbar-nav main">
               <li class="nav-item">
-                 <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                
+                 <a href="{{ url_for('index') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                  <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5z"/>
+                </svg> <br>Home</a>
               </li>
               <li class="nav-item">
-                 <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                 <a href="{{ url_for('logout') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                </svg><br>Logout</a>
               </li>
               
               <li class="nav-item">
-               <a href="{{ url_for('Myprofile') }}" class="nav-link ">MyProfile</a>
+               <a href="{{ url_for('Myprofile') }}" class="nav-link "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+              </svg><br>MyProfile</a>
             </li>
           </li>
           <li class="nav-item">
-           <a href="{{ url_for('profiles') }}" class="nav-link active">Profiles</a>
+           <a href="{{ url_for('profiles') }}" class="nav-link active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+          </svg><br>Profiles</a>
         </li>
       
 
@@ -60,122 +81,210 @@
      </div>
   </nav>
 </header>
+
+
+
+<div class="split left">
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  #myInput {
+    background-image: url('/css/searchicon.png');
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+  }
+  
+  #myUL {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  #myUL li a {
+    border: 1px solid #ddd;
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    display: block
+  }
+  
+  #myUL li a:hover:not(.header) {
+    background-color: #eee;
+  }
+  </style>
+  </head>
+  <body>
+  
+  <h4>Featured topics by category</h4>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+  </svg>
+  <input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+  
+  <ul id="myUL">
+    <li><a href="#">Adele</a></li>
+    <li><a href="#">Agnes</a></li>
+  
+    <li><a href="#">Billy</a></li>
+    <li><a href="#">Bob</a></li>
+  
+    <li><a href="#">Calvin</a></li>
+    <li><a href="#">Christina</a></li>
+    <li><a href="#">Cindy</a></li>
+  </ul>
+  
+  <script>
+  function myFunction() {
+      var input, filter, ul, li, a, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("myUL");
+      li = ul.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+          a = li[i].getElementsByTagName("a")[0];
+          txtValue = a.textContent || a.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              li[i].style.display = "";
+          } else {
+              li[i].style.display = "none";
+          }
+      }
+  }
+  </script>
+  
+  </body>
+  </html>
+  
+</div>
 <div class="split right">
-<div class="s" style="margin-top: 100px;">
-{% for user in users.items %}
-
-
-
-   
-      <div class="col-sm-9 col-md-6 col-lg-8 col-xl-10 " style="margin-right:0px;">
-        <div class="card mb-3" style="border-radius: .5rem; width:100%; margin-left:390px;">
-          <div class="row g-0" style="margin-left:30px;">
-            <div class="col"
-              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-              <img src="static\profilepic\{{user.image_file}}"
-                alt="Avatar" class="img-fluid my-5" style="width: 150px;" />
-              <h5>Username: {{user.username}}</h5>
-             
-              <p>Web Designer</p>
-              
-            <a href="{{url_for('profileupdate',username=user.username)}}">  <i class="far fa-edit mb-5"></i></a>
-            </div>
-            <div class="col-md-8" style="margin-right:250px;">
-              <div class="card-body p-4">
-                <h6>user information</h6>
-                <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                  <div class="col-6 mb-3" style="padding-bottom:5px;">
-                    <h6>Email</h6>
-                    <p class="text-muted">{{user.email}}</p>
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6>User ID</h6>
-                    <p class="text-muted">{{user.id}}</p>
-                  </div>
+ 
+    {% for user in users.items %}
+     <div class="row g-0" style="margin-left:30px;">
+                <div class="col"
+                  style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                  <img src="static\profilepic\{{user.image_file}}  "
+                    alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
+                  <h5>Username: {{user.username}}</h5>
+                 
+                  <p>Web Designer</p>
+                  
+                <a href="{{url_for('profileupdate',username=user.username)}}">  <i class="far fa-edit mb-5"></i></a>
                 </div>
-                <h6>Projects</h6>
-                <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6>Recent</h6>
-                    <button class="btn btn-primary">Go</button>
+                <div class="col-md-8" style="margin-right:40px;">
+                  <div class="card-body p-4">
+                    <h6>user information</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                      <div class="col-6 mb-3" style="padding-bottom:5px;">
+                        <h6>Email</h6>
+                        <p class="text-muted">{{user.email}}</p>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>User ID</h6>
+                        <p class="text-muted">{{user.id}}</p>
+                      </div>
+                    </div>
+                    <h6>Projects</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                      <div class="col-6 mb-3">
+                        <h6>Recent</h6>
+                        <button class="btn btn-primary">Go</button>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>Most Viewed</h6>
+                        <button class="btn btn-primary">Go</button>
+                      <p>Last seen on</p>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                      <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
+                      <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
+                      <a href="{{url_for('view', username=user.username)}}">View more</a>
+                    </div>
                   </div>
-                  <div class="col-6 mb-3">
-                    <h6>Most Viewed</h6>
-                    <button class="btn btn-primary">Go</button>
-                  <p>Last seen on</p>
-                  </div>
-                </div>
-                <div class="d-flex justify-content-start">
-                  <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                  <a href="{{url_for('view', username=user.username)}}">View more</a>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-<style>
-  .gradient-custom {
-/* fallback for old browsers */
-background: #f6d365;
-
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1));
-
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1))
-
-
-}
-</style>      
-
-
-
-
-{% endfor %}
-<div class="text-left" style="margin-left:1100px;">
-  <a href="{{ url_for('profiles', page=users.prev_num) }}"
-     class="btn btn-outline-dark 
-     {% if users.page == 1 %}disabled{% endif %}">
-      &laquo;
-  </a><!-- Loop through the number of pages to display a link for each-->
-  {% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}{% if page_num %}
-<!-- Check for the active page and set the link to "Active"-->
-          {% if users.page == page_num %}
-          <a href="{{ url_for('profiles', page=page_num) }}"
-             class="btn btn-dark">
-              {{ page_num }}
-          </a>
+            
+          
+        
+      
+    
+    
+    
+    
+    {% endfor %}
+    <div class="text-left" style="margin-right:100px; margin-bottom: 100px;">
+      <a href="{{ url_for('profiles', page=users.prev_num) }}"
+         class="btn btn-outline-dark 
+         {% if users.page == 1 %}disabled{% endif %}">
+          &laquo;
+        
+      </a><!-- Loop through the number of pages to display a link for each-->
+      {% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}{% if page_num %}
+    
+              {% if users.page == page_num %}
+              <a href="{{ url_for('profiles', page=page_num) }}"
+                 class="btn btn-dark">
+                  {{ page_num }}
+              </a>
+              {% else %}
+              <a href="{{ url_for('profiles', page=page_num) }}"
+                 class="btn btn-outline-dark">
+                  {{ page_num }}
+              </a>
+              {% endif %}
           {% else %}
-          <a href="{{ url_for('profiles', page=page_num) }}"
-             class="btn btn-outline-dark">
-              {{ page_num }}
-          </a>
+              ...
           {% endif %}
-      {% else %}
-          ...
-      {% endif %}
-  {% endfor %}    <a href="{{ url_for('profiles', page=users.next_num) }}"
-     class="btn btn-outline-dark 
-     {% if users.page == users.pages %}disabled{% endif %}">
-      &raquo;
-  </a>
-  <p class="text-right mt-3">
-    Showing page {{ users.page }} of {{ users.pages }}
-   </p>
-   
+      {% endfor %}    <a href="{{ url_for('profiles', page=users.next_num) }}"
+         class="btn btn-outline-dark 
+         {% if users.page == users.pages %}disabled{% endif %}">
+          &raquo;
+      </a>
+      <p class="text-right mt-3">
+        Showing page {{ users.page }} of {{ users.pages }}
+       </p>
+       
+    </div>
 </div>
 
-</div>
-<div class="split left">
-  hello
-</div>
+<style>
+  .split{
+  margin-top: 100px;
+  height: 100%;
+  width: 75%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 10px;
+  }
+  .left {
+  left: 0;
+  background-color: rgb(238, 238, 238);
+}
 
+.right {
+  right: 0;
+  background-color: #ffffff
+}
+
+</style>
 
 {% endblock content%}
 
