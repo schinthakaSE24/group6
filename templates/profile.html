@@ -52,9 +52,7 @@
           <li class="nav-item">
            <a href="{{ url_for('profiles') }}" class="nav-link active">Profiles</a>
         </li>
-        <li class="nav-item">
-          <a href="{{ url_for('logincom') }}" class="nav-link ">GET Ranked Cvs</a>
-       </li>
+      
 
        </ul>
            
@@ -62,32 +60,32 @@
      </div>
   </nav>
 </header>
-
-<div class="split right" style="margin-top: 100px;">
+<div class="split right">
+<div class="s" style="margin-top: 100px;">
 {% for user in users.items %}
 
 
 
    
-      <div class="col-sm-9 col-md-6 col-lg-8 col-xl-10 " style="width:100%;" >
-        <div class="card mb-3" style="border-radius: .5rem; width:100%;">
-          <div class="row g-0">
-            <div class="col-md-4 gradient-custom text-center text-white"
+      <div class="col-sm-9 col-md-6 col-lg-8 col-xl-10 " style="margin-right:0px;">
+        <div class="card mb-3" style="border-radius: .5rem; width:100%; margin-left:390px;">
+          <div class="row g-0" style="margin-left:30px;">
+            <div class="col"
               style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
               <img src="static\profilepic\{{user.image_file}}"
-                alt="Avatar" class="img-fluid my-5" style="width: 100px;" />
+                alt="Avatar" class="img-fluid my-5" style="width: 150px;" />
               <h5>Username: {{user.username}}</h5>
-              <button class="btn btn-outline-primary" style="margin-left:-300px;">Select</button>
+             
               <p>Web Designer</p>
-            
-              <i class="far fa-edit mb-5"></i>
+              
+            <a href="{{url_for('profileupdate',username=user.username)}}">  <i class="far fa-edit mb-5"></i></a>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8" style="margin-right:250px;">
               <div class="card-body p-4">
-                <h6>Information</h6>
+                <h6>user information</h6>
                 <hr class="mt-0 mb-4">
                 <div class="row pt-1">
-                  <div class="col-6 mb-3" style="padding-bottom:10px;">
+                  <div class="col-6 mb-3" style="padding-bottom:5px;">
                     <h6>Email</h6>
                     <p class="text-muted">{{user.email}}</p>
                   </div>
@@ -140,7 +138,7 @@ background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 1
 
 
 {% endfor %}
-<div class="text-right">
+<div class="text-left" style="margin-left:1100px;">
   <a href="{{ url_for('profiles', page=users.prev_num) }}"
      class="btn btn-outline-dark 
      {% if users.page == 1 %}disabled{% endif %}">
@@ -167,10 +165,17 @@ background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 1
      {% if users.page == users.pages %}disabled{% endif %}">
       &raquo;
   </a>
+  <p class="text-right mt-3">
+    Showing page {{ users.page }} of {{ users.pages }}
+   </p>
+   
 </div>
-<p class="text-right mt-3">
- Showing page {{ users.page }} of {{ users.pages }}
-</p>
+
+</div>
+<div class="split left">
+  hello
+</div>
+
 
 {% endblock content%}
 

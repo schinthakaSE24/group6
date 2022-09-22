@@ -141,9 +141,7 @@ profile page
                 </div>
                 <hr>
                 <div class="row">
-                  <div class="col-sm-12">
-                    <a class="btn btn-info " target="__blank" a href="{{ url_for('profileupdate') }}" >Edit</a>
-                  </div>
+                 
                 </div>
               </div>
             </div>
@@ -261,20 +259,20 @@ profile page
   <p>Check your results</p>
 </div>
 <div class="pred-result">
-  <p class="text">Predicted Position: {{pred}}</p>
+  <p class="text" style="margin:20px;">Predicted Position: {{pred}}</p>
 </div>
 
-    <table class="styled-table">
+    <table class="styled-table" style="margin:20px;">
       <thead>
-          <tr>
+          <tr style="padding:20px;">
               <th>Name</th>
               <th>Points</th>
           </tr>
       </thead>
-      <tbody>
+      <tbody >
           {% for key, value in dict_item.items() %}
-          <tr>
-            <td id="key">{{key}}</td>
+          <tr style="padding:40px;">
+           <td id="key"><b>{{key}}:</b></td>
             <td>{{value}}</td>
         </tr>
   {% endfor %}

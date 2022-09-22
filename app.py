@@ -40,7 +40,7 @@ import joblib
 from werkzeug.utils import secure_filename
 import spacy
 from datetime import datetime
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user,login_required, logout_user, current_user
 import uuid
 from extract_txt import read_files
 from txt_processing import preprocess
@@ -71,11 +71,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(15),unique=True)
     email = db.Column(db.String(50),unique=True)
     password = db.Column(db.String(80))
-    companyname = db.Column(db.String(50),unique=True)
-    companyemail = db.Column(db.String(50),unique=True)
     image_file = db.Column(db.String(20), nullable=False, default="download.jpg")
-    companyname = db.Column(db.String(50),unique=True)
-    companyemail = db.Column(db.String(50),unique=True)
     phonenumber = db.Column(db.String(50),unique=True)
     address = db.Column(db.String(50),unique=True)
    
@@ -89,10 +85,21 @@ class Cv(UserMixin, db.Model):
     degree = db.Column(db.String(),unique=True)
     experience =db.Column(db.String(),unique=True)
     
-    
+class Company(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    companyname = db.Column(db.String(50),unique=True)
+    companyemail = db.Column(db.String(50),unique=True)
+    password = db.Column(db.String(80))
+   
+
+
+
     
 def __repr__(self):
     return f"User('{self.username}', '{self.password}')"  
+
+
+    
        
 @app.before_first_request
 def create_tables():
@@ -101,7 +108,7 @@ def create_tables():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(int(user_id)) 
 
 
 class LoginForm(FlaskForm):
@@ -112,18 +119,19 @@ class LoginForm(FlaskForm):
 class LoginFormcom(FlaskForm):
     
     companyemail = StringField('Companyemail:', validators=[InputRequired()])
+    companyname = StringField('Companyemail:', validators=[InputRequired()])
     password = PasswordField('Password:', validators=[InputRequired()])
-    remember = BooleanField('Remember me')
+   
 
 class RegisterForm(FlaskForm):
-    email = StringField('Email')
-    username = StringField('Username:')
-    usertype = StringField("usertype")
+    email = StringField('Email' ,validators=[InputRequired()])
+    username = StringField('Username:', validators=[InputRequired()])
     password = PasswordField('Password:')
-    companyname = StringField("companyname:")
-    companyemail = StringField('companyemail:')
-    
-
+   
+class RegisterFormc(FlaskForm):   
+    companyname = StringField("companyname:",validators=[InputRequired()])
+    companyemail = StringField('companyemail:',validators=[InputRequired()])
+    password = PasswordField('Password:')
 
 @app.route('/')
 def index():
@@ -148,20 +156,25 @@ def login():
       
 
     return render_template('login.html', form=form)
-@app.route('/logincompany', methods=['GET', 'POST'])
+
+
+@app.route('/logincom', methods=['GET', 'POST'])
 def logincom():
     form = LoginFormcom()
- 
+
     if form.validate_on_submit():
-        cuser = User.query.filter_by(companyemail=form.companyemail.data).first()
+        cuser = Company.query.filter_by(companyemail=form.companyemail.data).first()
         if cuser:
             if check_password_hash(cuser.password, form.password.data):
                 login_user(cuser, remember=form.remember.data)
-                return redirect(url_for('cv'))
-           
-        flash("Invalid username or password", 'danger')
-        return redirect(url_for('logincom'))
-        
+                return redirect(url_for('profilecom'))
+            else:
+                flash("invalid password")
+
+        else:
+            flash("Invalid username or password", 'danger')
+            return redirect(url_for('logincom'))
+      
 
     return render_template('logincom.html', form=form)
 
@@ -193,21 +206,18 @@ def signup():
 
 @app.route('/signcom', methods=['GET', 'POST'])
 def signcom():
-    form = RegisterForm()
+    form = RegisterFormc()
 
     if form.validate_on_submit():
     
-        email = request.form.get("email")
+       
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         companyname = request.form.get("companyname")
         companyemail = request.form.get("companyemail")
        
-        
-        
-    
-        user = User.query.filter_by(companyname=companyname).first() or User.query.filter_by(companyemail=companyemail).first() or User.query.filter_by(email=email).first()   
+        user = Company.query.filter_by(companyname=companyname).first() or Company.query.filter_by(companyemail=companyemail).first()    
         if not user:
-            cuser = User(username=form.username.data,email=form.email.data,password=hashed_password,companyname=form.companyname.data,companyemail=form.companyemail.data)
+            cuser = Company(companyname=form.companyname.data,companyemail=form.companyemail.data,password=hashed_password)
             db.session.add(cuser)
             db.session.commit() 
             return redirect(url_for('logincom'))
@@ -224,6 +234,10 @@ def signcom():
 
     return render_template('signcom.html', form=form)
 
+@app.route('/profilecom', methods=['GET', 'POST'])
+def profilecom():
+    cusers = Company.query.all()
+    return render_template('cprofile.html',cusers=cusers)
 
 @app.route('/dashboard')
 @login_required
@@ -349,6 +363,9 @@ def pro(username):
    
     return render_template('search.html', username=username)
 
+@app.route('/rec',methods=['GET', 'POST'])
+def cprofile():
+    return render_template('cprofile.html')
 
 ROWS_PER_PAGE = 4
 @app.route('/profiles')
@@ -368,6 +385,7 @@ def profiles():
 @app.route('/Myprofile',methods=['GET', 'POST'])
 @login_required
 def Myprofile():
+    
     
     imagefile = url_for('static', filename='profilepic/' + str(current_user.image_file))
     return render_template('Myprofile.html', imagefile=imagefile)
@@ -415,9 +433,10 @@ def save_picture(form_picture):
     return picture_fn
 
 
-@app.route('/profileupdate',methods=['GET', 'POST'])
+@app.route('/profileupdate/<username>',methods=['GET', 'POST'])
 @login_required
-def profileupdate():
+def profileupdate(username):
+    user= User.query.filter_by(username=username).first()
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -432,14 +451,14 @@ def profileupdate():
         flash('Your account has been updated!', 'success')
         return redirect(url_for('Myprofile'))
     elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-        form.phonenumber.data = current_user.phonenumber
-        form.address.data = current_user.address
+        form.username.data = user.username
+        form.email.data = user.email
+        form.phonenumber.data = user.phonenumber
+        form.address.data = user.address
 
-    image_file = url_for('static', filename='profilepic/' + str(current_user.image_file))
+    image_file = url_for('static', filename='profilepic/' + str(user.image_file))
     return render_template('update.html',
-                           image_file=image_file, form=form)
+                           image_file=image_file, form=form,user=user)
    
 class SearchForm(FlaskForm):
 	searched = StringField("Searched", validators=[DataRequired()])

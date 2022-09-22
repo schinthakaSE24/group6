@@ -88,7 +88,7 @@ Registration Page
                  <a href="{{ url_for('index') }}" class="nav-link">Home</a>
               </li>
               <li class="nav-item">
-                 <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                 <a href="{{ url_for('logincom') }}" class="nav-link">Login</a>
               </li>
               <li class="nav-item">
                  <a href="{{ url_for('signup') }}" class="nav-link active">Register</a>
@@ -104,27 +104,30 @@ Registration Page
       
      
       {{ form.hidden_tag() }}
-      
-    <div class="form-floating pt-15">
-      {{ wtf.form_field(form.username) }}
+    <div class="form-floating pt-15" >
+        {{ wtf.form_field(form.companyname) }}
     </div>
     <div class="form-floating pt-15">
-        {{ wtf.form_field(form.email) }}
+        {{ wtf.form_field(form.companyemail) }}
     </div>
+    
     <div class="form-floating pt-15">
         {{ wtf.form_field(form.password) }}
     </div>
- 
-     <div class="form-floating pt-15">
-      {{ wtf.form_field(form.companyname) }}
-     </div>
-     <div class="form-floating pt-15">
-      {{ wtf.form_field(form.companyemail) }}
-     </div>
+   
+    
      
      <button class="w-100 btn btn-lg btn-primary mt-10 sign-btn" type="submit">Register</button>
    </form>
+   {% with messages = get_flashed_messages() %}
+{% if messages %}
+       {% for message in messages %}
+          {{ message }}
+       {% endfor %}
+  {% endif %}
+ {% endwith %}
 </div>
+
 
 
 {% endblock %}
