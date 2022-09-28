@@ -185,26 +185,6 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/logincom', methods=['GET', 'POST'])
-def logincom():
-    form = LoginFormcom()
-
-    if form.validate_on_submit():
-        cuser = Company.query.filter_by(companyemail=form.companyemail.data).first()
-        if cuser:
-            if check_password_hash(cuser.password, form.password.data):
-                login_user(cuser, remember=form.remember.data)
-                return redirect(url_for('profilecom'))
-            else:
-                flash("invalid password")
-
-        else:
-            flash("Invalid username or password", 'danger')
-            return redirect(url_for('logincom'))
-      
-
-    return render_template('logincom.html', form=form)
-
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():   
     form = RegisterForm()
@@ -231,35 +211,7 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-@app.route('/signcom', methods=['GET', 'POST'])
-def signcom():
-    form = RegisterFormc()
 
-    if form.validate_on_submit():
-    
-       
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        companyname = request.form.get("companyname")
-        companyemail = request.form.get("companyemail")
-       
-        user = Company.query.filter_by(companyname=companyname).first() or Company.query.filter_by(companyemail=companyemail).first()    
-        if not user:
-            cuser = Company(companyname=form.companyname.data,companyemail=form.companyemail.data,password=hashed_password)
-            db.session.add(cuser)
-            db.session.commit() 
-            return redirect(url_for('logincom'))
-            
-      
-        else:
-            flash("Entered deatils already exists")
-            return redirect(url_for('signcom'))
-           
-            
-        
-       
-            
-
-    return render_template('signcom.html', form=form)
 
 @app.route('/profilecom', methods=['GET', 'POST'])
 def profilecom():
