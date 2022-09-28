@@ -48,7 +48,8 @@ from txt_processing import preprocess
 from txt_to_features import txt_features, feats_reduce
 from extract_entities import get_number, get_email, rm_email, rm_number, get_name, get_skills
 from model import simil
-
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
@@ -56,6 +57,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
+mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -93,6 +95,18 @@ class User(UserMixin, db.Model):
         return Message.query.filter_by(recipient=self).filter(
             Message.timestamp > last_read_time).count()
 
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer('secret', expires_in=expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer('secret')
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
    
 class Cv(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -468,7 +482,64 @@ def info(username):
 def infov():
     users = User.query.all()
     return render_template('name.html', users=users)   
-   
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'lasinore98@gmail.com'
+app.config['MAIL_PASSWORD'] = 'ugjpdfuijvdhcaes'
+
+#Reset password
+class RequestResetForm(FlaskForm):
+    email = StringField('email:', validators=[InputRequired(), Email()])
+    submit = SubmitField(label='Reset Password',validators=[DataRequired()])
+
+    def validate_email(self, email):
+        if email.data != current_user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user is None:
+                raise ValidationError('That email does not have account. You must register first','Danger')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password:', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password:', validators=[DataRequired()])
+    submit = SubmitField('Reset Password',validators=[DataRequired()])
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password reset Request', recipients=[user.email], sender='noreply@demo.com')
+
+    msg.body = f'''To reset your password, visit folllowing link:
+    {url_for('reset_token', token=token, _external=True)}
+    if you did't make a request, Please ignore this email'''
+
+    mail.send(msg)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():   
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_reset_email(user)
+            flash('Email has been sent', 'success')
+            return redirect(url_for('login'))
+    return render_template('reset_request.html', title='Reset Request', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256').decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash("Your password has been updated successfully")
+        return redirect(url_for('login'))
+    return render_template('reset_token.html', title='Reset Password', form=form)   
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/resumes/')
 DOWNLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/outputs/')
@@ -487,7 +558,6 @@ if not os.path.isdir(DOWNLOAD_FOLDER):
 app.config['UPLOAD_CV'] = UPLOAD_CV
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
-app.config['SECRET_KEY'] = 'nani?!'
 
 # Allowed extension you can set your own
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'doc','docx'])
@@ -535,7 +605,7 @@ def download(code):
     if code in files:
         path = os.path.join(UPLOAD_FOLDER, code)
         if os.path.exists(path):
-            return os.sendfile(path)
+            return send_file(path)
     
  
 def _show_page():
@@ -584,7 +654,7 @@ def process():
 
         dt['Skills']=dt['Original'].apply(lambda x: get_skills(x,skill))
         dt = dt.drop(columns=['Original','Original Resume'])
-        sorted_dt = dt.sort_values(by=['JD 1'], ascending=False)
+        sorted_dt = dt.sort_values(by=['RANK 1'], ascending=False)
 
         out_path = DOWNLOAD_FOLDER+"Candidates.csv"
         sorted_dt.to_csv(out_path,index=False)

@@ -9,8 +9,8 @@ import pandas as pd
 
 
 if __name__=="__main__":
-    directory = '/home/ayoub/DS/Parser-Shortlisting-Project/Data/'
-    resume_path = '/home/ayoub/DS/Parser-Shortlisting-Project/files/resumes'
+    directory = '/Group6/Data/'
+    resume_path = '/Group6/files/resumes'
     jd_path = directory + 'JobDesc/'
 
     resumetxt=read_files(resume_path)
@@ -34,7 +34,7 @@ if __name__=="__main__":
     dt['Original']=dt['Original'].apply(lambda x: rm_email(x))
     dt['Candidate\'s Name']=dt['Original'].apply(lambda x: get_name(x))
 
-    skills = pd.read_csv('/home/ayoub/DS/Parser-Shortlisting-Project/Data/skill_red.csv')
+    skills = pd.read_csv('/Group6/Data/skill_red.csv')
     skills = skills.values.flatten().tolist()
     skill = []
     for z in skills:
