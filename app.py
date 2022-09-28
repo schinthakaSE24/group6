@@ -17,6 +17,7 @@ import secrets
 import sqlite3
 from tkinter.tix import Form
 from tokenize import String
+from turtle import width
 from unittest import result
 from flask import Flask, render_template, redirect, url_for, request,send_file,session
 from flask_bootstrap import Bootstrap
@@ -74,6 +75,24 @@ class User(UserMixin, db.Model):
     image_file = db.Column(db.String(20), nullable=False, default="download.jpg")
     phonenumber = db.Column(db.String(50),unique=True)
     address = db.Column(db.String(50),unique=True)
+    messages_sent = db.relationship(
+        'Message',
+        foreign_keys='Message.sender_id',
+        backref='author',
+        lazy='dynamic')
+    messages_received = db.relationship(
+        'Message',
+        foreign_keys='Message.recipient_id',
+        backref='recipient',
+        lazy='dynamic')
+    last_message_read_time = db.Column(db.DateTime)
+   
+
+    def new_messages(self):
+        last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+        return Message.query.filter_by(recipient=self).filter(
+            Message.timestamp > last_read_time).count()
+
    
 class Cv(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -92,7 +111,15 @@ class Company(UserMixin, db.Model):
     password = db.Column(db.String(80))
    
 
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
+    def __repr__(self):
+        return f'Message: {self.body}'  
 
     
 def __repr__(self):
@@ -433,10 +460,10 @@ def save_picture(form_picture):
     return picture_fn
 
 
-@app.route('/profileupdate/<username>',methods=['GET', 'POST'])
+@app.route('/profileupdate',methods=['GET', 'POST'])
 @login_required
-def profileupdate(username):
-    user= User.query.filter_by(username=username).first()
+def profileupdate():
+   
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -451,18 +478,18 @@ def profileupdate(username):
         flash('Your account has been updated!', 'success')
         return redirect(url_for('Myprofile'))
     elif request.method == 'GET':
-        form.username.data = user.username
-        form.email.data = user.email
-        form.phonenumber.data = user.phonenumber
-        form.address.data = user.address
+        form.username.data = current_user.username
+        form.email.data =current_user.email
+        form.phonenumber.data = current_user.phonenumber
+        form.address.data = current_user.address
 
-    image_file = url_for('static', filename='profilepic/' + str(user.image_file))
+    image_file = url_for('static', filename='profilepic/' + str(current_user.image_file))
     return render_template('update.html',
-                           image_file=image_file, form=form,user=user)
+                           image_file=image_file, form=form)
    
 class SearchForm(FlaskForm):
 	searched = StringField("Searched", validators=[DataRequired()])
-	submit = SubmitField("Submit")
+	submit = SubmitField("send")
 @app.route('/search', methods=["POST"])
 @login_required
 def search():
@@ -611,6 +638,50 @@ def process():
         sorted_dt.to_csv(out_path,index=False)
 
         return send_file(out_path, as_attachment=True)
+
+
+class MessageForm(FlaskForm):
+    message = StringField(
+        'Message',
+        validators=[DataRequired(), Length(min=0, max=140)],)
+    submit = SubmitField('send')
+
+
+@app.route('/send_message/<recipient>', methods=['GET', 'POST'])
+@login_required
+def send_message(recipient):
+    user = User.query.filter_by(username=recipient).first_or_404()
+    form = MessageForm()
+    if form.validate_on_submit():
+        msg = Message(
+            sender_id=current_user.id,
+            recipient_id=user.id,
+            body=form.message.data)
+        db.session.add(msg)
+       
+        db.session.commit()
+        flash('Your message has been sent.')
+        return redirect(url_for('profiles', username=recipient))
+    return render_template(
+        'send_message.html',
+        title='Send Message',
+        form=form,
+        recipient=recipient)
+
+@app.route('/messages')
+@login_required
+def messages():
+    current_user.last_message_read_time = datetime.utcnow()
+    
+    db.session.commit()
+    page = request.args.get('page', 1, type=int)
+    messages = current_user.messages_received.order_by(
+        Message.timestamp.desc())
+    
+    return render_template(
+        'messages.html',
+        messages=messages
+        )
 
     
 if __name__ == '__main__':

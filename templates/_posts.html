@@ -1,0 +1,21 @@
+<table class="table table-hover">
+    <tr valign='top'>
+        <td width='70px'>
+            <img src="static\profilepic\{{post.sender_id.image_file}}  ">
+        </td>
+        <td>
+            <span class="user_popup">
+                <a href="{{ url_for('view', username=post.sender_id.username) }}">
+                    {{ post.sender_id.username }}
+                </a>
+            </span>
+            said
+            <span>
+            {{ post.timestamp }}:
+            </span><br>
+            <span>
+                {{ post.body }}                    
+            </span>
+        </td>
+    </tr>
+</table>
