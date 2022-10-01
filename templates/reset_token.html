@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Login
+Reset Password
 {% endblock %}
 
 {% block content %}
@@ -103,31 +103,19 @@ Login
       <form method="post" action="/login" class="form-signin">
          <div class="upper-content text-center">
         <img class="mb-4" src="{{ url_for('static', filename='img/user.png') }}" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <h1 class="h3 mb-3 fw-normal">Enter Your New Password</h1>
         </div>
       
-         {{ form.hidden_tag() }}
-        <div class="form-floating">
-         {{ wtf.form_field(form.username) }}
-        </div>
-        <div class="form-floating pt-15">
-         {{ wtf.form_field(form.password) }}
-        </div>
-        <small class="text-muted ml=2">
-          <a href="{{ url_for('reset_request') }}">Forgot Password</a>
-        </small>
-      
-
-        <button class="w-100 btn btn-lg btn-primary mt-10 sign-btn" type="submit">Sign in</button>
+            {{ form.hidden_tag() }}
+            <div class="form-floating pt-15">
+            {{ wtf.form_field(form.password) }}
+            </div>
+           <div class="form-floating pt-15">
+            {{ wtf.form_field(form.confirm_password) }}
+           </div>
+        <button class="w-100 btn btn-lg btn-primary mt-10 sign-btn" type="submit">Reset Password</button>
       </form>
-      {% with messages = get_flashed_messages() %}
-{% if messages %}
-       {% for message in messages %}
-          {{ message }}
-       {% endfor %}
-  {% endif %}
- {% endwith %}
-      <p class="text-center pt-10">Don't have an account? Please <a href="{{ url_for('signup') }}">register</a> here.</p>
+      
 </div>
 
 <!-- Footer Section Ends -->

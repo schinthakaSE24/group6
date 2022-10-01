@@ -13,7 +13,7 @@ def simil(feats, p_resumetxt, p_jdtxt):
     similarity = cosine_similarity(feats[0:len(p_resumetxt)],feats[len(p_resumetxt):])
     abc = []
     for i in range(1,len(p_jdtxt)+1):
-        abc.append(f"JD {i}")
+        abc.append(f"RANK {i}")
 
     # DataFrame of similarity score
     df_sim=pd.DataFrame(similarity,columns=abc)
