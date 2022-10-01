@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}
+profile page
+{% endblock %}
+{% block content %}
+<style>
+   
+ 
+  nav .navbar-brand.logo {
+   color: #222;
+ }
+ nav.navbar ul.navbar-nav li.nav-item a.active {
+      color: #ef6108 !important;
+    }
+    nav.navbar .nav-item {
+      padding: 0 13px 0 13px;
+      font-family: "Raleway", sans-serif;
+      color: #222;
+    }
+    
+    nav.navbar ul.navbar-nav li.nav-item a.nav-link {
+      font-size: 12px;
+      font-weight: 500;
+      color: #222;
+      padding: 0;
+      position: relative;
+      text-transform: uppercase;
+    }
+ </style>
+<header class="header-content">
+  <nav class="navbar navbar-expand-lg navbar-light">
+     <div class="container">
+      <a class="navbar-brand logo" href="#">Employee recruiter</a>
+       <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="25" height="24" class="nav-logo"> -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-expanded="false" aria-controls="navbarCollapse" aria-label="Toggle Navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+           <ul class="navbar-nav main">
+              <li class="nav-item">
+                
+                 <a href="{{ url_for('index') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                  <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5z"/>
+                </svg> <br>Home</a>
+              </li>
+              
+              <li class="nav-item">
+               <a href="{{ url_for('Myprofile') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+              </svg><br>MyProfile</a>
+            </li>
+          </li>
+          <li class="nav-item">
+           <a href="{{ url_for('rview') }}" class="nav-link active "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+          </svg><br>recruiters</a>
+        </li>
+      
+      
+       <li class="nav-item">
+        <a href="{{ url_for('login') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+            <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+          </svg><br>sign in</a>
+     </li>
+
+
+       </ul>
+           
+        </div>
+     </div>
+  </nav>
+</header>
+
+<div class="split right">
+    {% for user in users%}
+     {% if user.usertype=="user as recruiter"%}
+     <div class="row g-0" style="margin-left:30px;">
+        <div class="col"
+          style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+          <img src="static\profilepic\{{user.image_file}}  "
+            alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
+          <h5>Username: {{user.username}}</h5>
+         
+          <p>Web Designer</p>
+          
+        <a href="{{url_for('profileupdate')}}">  <i class="far fa-edit mb-5"></i></a>
+        </div>
+        <div class="col-md-8" style="margin-right:40px;">
+          <div class="card-body p-4">
+            <h6>user information</h6>
+            <hr class="mt-0 mb-4">
+            <div class="row pt-1">
+              <div class="col-6 mb-3" style="padding-bottom:5px;">
+                <h6>Email</h6>
+                <p class="text-muted">{{user.email}}</p>
+              </div>
+              <div class="col-6 mb-3">
+                <h6>User ID</h6>
+                <p class="text-muted">{{user.id}}</p>
+              </div>
+            </div>
+            <h6>Projects</h6>
+            <hr class="mt-0 mb-4">
+            <div class="row pt-1">
+              <div class="col-6 mb-3">
+                <h6>Recent</h6>
+                <button class="btn btn-primary">Go</button>
+              </div>
+              <div class="col-6 mb-3">
+                <h6>Most Viewed</h6>
+                <button class="btn btn-primary">Go</button>
+              <p>Last seen on</p>
+              </div>
+            </div>
+            <div class="d-flex justify-content-start">
+              <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
+              <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
+              <a href="{{url_for('view', username=user.username)}}">View more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    
+     {% endif %}
+    {% endfor %}
+</div>
+
+<style>
+.split{
+margin-top: 100px;
+height: 100%;
+width: 75%;
+position: fixed;
+z-index: 1;
+top: 0;
+overflow-x: hidden;
+padding-top: 10px;
+}
+.left {
+left: 0;
+background-color: rgb(238, 238, 238);
+}
+
+.right {
+right: 0;
+background-color: #ffffff
+}
+
+</style>
+
+{% endblock content%}
+
+
+
