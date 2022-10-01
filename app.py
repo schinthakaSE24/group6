@@ -75,6 +75,7 @@ class User(UserMixin, db.Model):
     image_file = db.Column(db.String(20), nullable=False, default="download.jpg")
     phonenumber = db.Column(db.String(50),unique=True)
     address = db.Column(db.String(50),unique=True)
+    usertype = db.Column(db.String(50),unique=True)
     messages_sent = db.relationship(
         'Message',
         foreign_keys='Message.sender_id',
@@ -153,6 +154,7 @@ class LoginFormcom(FlaskForm):
 class RegisterForm(FlaskForm):
     email = StringField('Email' ,validators=[InputRequired()])
     username = StringField('Username:', validators=[InputRequired()])
+    usertype = RadioField('usertype', choices=[('user as applicant'),('user as recruiter')] ,validators=[InputRequired()])
     password = PasswordField('Password:')
    
 class RegisterFormc(FlaskForm):   
@@ -194,10 +196,11 @@ def signup():
             form.password.data, method='sha256')
         email = request.form.get("email")
         username = request.form.get("username")
+        checked = request.form.get("usertype")
     
         user = User.query.filter_by(email=email).first() or User.query.filter_by(username=username).first()
         if not user:
-            new_user = User(username=form.username.data,email=form.email.data,password=hashed_password)
+            new_user = User(username=form.username.data,email=form.email.data,usertype=checked,password=hashed_password)
             db.session.add(new_user)
             db.session.commit()
             flash("User Account created successfully")
