@@ -276,6 +276,13 @@ profile page
          </div>
          
     </div>
+    <div class="cv" style="text-align:center;"> {% for cv in cvs %} 
+      {% if cv.username== current_user.username%}
+      {{cv.file}}  <a href="{{url_for('delete')}}"> <button type="button" class="btn btn-outline-info">Delete</button></a> <br>
+      {%endif%}
+      {% endfor%}
+     </div>
+
 {% with messages = get_flashed_messages() %}
 {% if messages %}
        {% for message in messages %}
