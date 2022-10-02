@@ -475,16 +475,11 @@ def view(username):
 
   
     return render_template("pdf.html",user=user,cuser=cuser)
-@app.route('/info/<username>')
-def info(username):
-    user= User.query.filter_by(username=username).first()
-    cuser= Cv.query.filter_by(username=username).first()
-    return render_template('info.html', user=user,cuser=cuser)
-    
-@app.route('/info')
-def infov():
+@app.route('/recruiters',methods=["GET", "POST"])
+def rview():
     users = User.query.all()
-    return render_template('name.html', users=users)   
+    return render_template("rec.html",users=users)
+    
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587

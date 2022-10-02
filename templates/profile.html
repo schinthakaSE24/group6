@@ -168,6 +168,7 @@
 <div class="split right">
  
     {% for user in users.items %}
+    {% if user.usertype=="user as applicant" %}
      <div class="row g-0" style="margin-left:30px;">
                 <div class="col"
                   style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
@@ -215,7 +216,7 @@
                 </div>
               </div>
             
-          
+     {% endif %}     
         
       
     
