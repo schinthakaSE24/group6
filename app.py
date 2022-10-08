@@ -366,7 +366,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/profile/<username>')
+@app.route('/profile/<username>') 
 def pro(username):
     username="nuwan"
    
@@ -376,7 +376,7 @@ def pro(username):
 def cprofile():
     return render_template('cprofile.html')
 
-ROWS_PER_PAGE = 4
+ROWS_PER_PAGE = 50
 @app.route('/profiles')
 def profiles():
     users = User.query.all()
@@ -716,7 +716,6 @@ def messages():
         messages=messages
         )
 
-    
 if __name__ == '__main__':
     #app.run('0.0.0.0', port=(os.environ.get("PORT", 5000)))
      app.run(debug=True)
