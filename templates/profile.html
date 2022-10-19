@@ -86,10 +86,14 @@
 
 
 <div class="split left">
-  <!DOCTYPE html>
-  <html>
-  <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+   
+    <h4>find user here more</h4>
+
+
+
+  
   <style>
   * {
     box-sizing: border-box;
@@ -130,100 +134,77 @@
   </head>
   <body>
   
-  <h4>Featured topics by category</h4>
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-  </svg>
-  <input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-  
-  <ul id="myUL">
-    {% for user in users.items%}
-    <li><a href="{{url_for('view', username=user.username)}}">{{user.username}}</a></li>
-     {% endfor %}
-  </ul>
-  
-  <script>
-  function myFunction() {
-      var input, filter, ul, li, a, i, txtValue;
-      input = document.getElementById("myInput");
-      filter = input.value.toUpperCase();
-      ul = document.getElementById("myUL");
-      li = ul.getElementsByTagName("li");
-      for (i = 0; i < li.length; i++) {
-          a = li[i].getElementsByTagName("a")[0];
-          txtValue = a.textContent || a.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-              li[i].style.display = "";
-          } else {
-              li[i].style.display = "none";
-          }
-      }
-  }
-  </script>
-  
+ 
   </body>
   </html>
   
 </div>
-<div class="split right">
+<div class="split right" >
+  <div class="im">
+    <img src="\static\img\search.png" width="40px" height="40px">
+  </div>
+ 
+    
+  </svg>
+  <input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search for users.." title="Type in a name">
+ 
+  
+  
+ 
+  <ul id="myUl">
  
     {% for user in users.items %}
+   
     {% if user.usertype=="user as applicant" %}
-     <div class="row g-0" style="margin-left:30px;">
-                <div class="col"
-                  style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                  <img src="static\profilepic\{{user.image_file}}  "
-                    alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
-                  <h5>Username: {{user.username}}</h5>
-                 
-                  <p>Web Designer</p>
-                  
-                <a href="{{url_for('profileupdate')}}">  <i class="far fa-edit mb-5"></i></a>
-                </div>
-                <div class="col-md-8" style="margin-right:40px;">
-                  <div class="card-body p-4">
-                    <h6>user information</h6>
-                    <hr class="mt-0 mb-4">
-                    <div class="row pt-1">
-                      <div class="col-6 mb-3" style="padding-bottom:5px;">
-                        <h6>Email</h6>
-                        <p class="text-muted">{{user.email}}</p>
-                      </div>
-                      <div class="col-6 mb-3">
-                        <h6>User ID</h6>
-                        <p class="text-muted">{{user.id}}</p>
-                      </div>
-                    </div>
-                    <h6>Projects</h6>
-                    <hr class="mt-0 mb-4">
-                    <div class="row pt-1">
-                      <div class="col-6 mb-3">
-                        <h6>Recent</h6>
-                        <button class="btn btn-primary">Go</button>
-                      </div>
-                      <div class="col-6 mb-3">
-                        <h6>Most Viewed</h6>
-                        <button class="btn btn-primary">Go</button>
-                      <p>Last seen on</p>
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-start">
-                      <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                      <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                      <a href="{{url_for('view', username=user.username)}}">View more</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <li>
+      <div class="row g-0" style="margin-left:30px;">
+      
+      <b><a href="{{url_for('view', username=user.username)}}">{{user.username}}</a></b>
+        <img src="static\profilepic\{{user.image_file}}  "
+      alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
+      <div class="de" style="margin-left:200px; padding:20px ; margin-top:-200px;"> 
+         <b>full name:</b> <br>
+        <b>email adress:</b> {{user.email}}<br>
+        <b>conatct details:</b><br>
+    <button><a href="{{url_for('view', username=user.username)}}">view more</a></button>
+      </div> 
+      <div class="me" style="margin-left:800px; margin-top: -100px;"> <button><a href="{{url_for('send_message', recipient=user.username)}}">send message</a></button></div>
+    
+        <p>Web Designer</p>
+        <hr>
+                      
+      </div>
+    </li>
             
      {% endif %}     
         
       
-    
+
     
     
     
     {% endfor %}
+    
+  </ul>
+
+  <script>
+    function myFunction() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();  
+        ul = document.getElementById("myUl");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+    </script>
     <div class="text-left" style="margin-right:100px; margin-bottom: 100px;">
       <a href="{{ url_for('profiles', page=users.prev_num) }}"
          class="btn btn-outline-dark 

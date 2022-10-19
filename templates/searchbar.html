@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="se" style="text-align:center;">
+<h4>find user here</h4>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg>
+<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<ul id="myUL">
+  {% for user in users%}
+  {% if user.usertype=="user as applicant" %}
+  <li>
+  <div class="row g-0" style="margin-left:30px;">
+  
+  <a href="{{url_for('view', username=user.username)}}">{{user.username}}</a>
+    <img src="static\profilepic\{{user.image_file}}  "
+  alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
+   
+hello
+    <p>Web Designer</p>
+                  
+  </div>
+</li>
+   {%endif%}
+   {% endfor %}
+</ul>
+
+<script>
+function myFunction() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+</div>
+{% endblock content %}
+

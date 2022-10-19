@@ -118,6 +118,7 @@ class Cv(UserMixin, db.Model):
     skills = db.Column(db.String(),unique=True)
     degree = db.Column(db.String(),unique=True)
     experience =db.Column(db.String(),unique=True)
+    file = db.Column(db.String(150),unique=True)
     
 class Company(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -240,12 +241,20 @@ def profilecom():
 def dashboard():
     return render_template('dashboard.html', name=current_user.username)
 
-UPLOAD_CV = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/cv/')
+
+
+UPLOAD_FOLDERR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/resumes/')
+app.config['UPLOAD_FOLDERR'] = UPLOAD_FOLDERR
+if not os.path.isdir(UPLOAD_FOLDERR):
+    os.mkdir(UPLOAD_FOLDERR)
+
+UPLOAD_CV = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/resumes/')
 @app.route('/uploader', methods=['GET', 'POST'])
 def dashboards():
      if request.method == 'POST':
         f = request.files['file']
-        f.save(secure_filename(f.filename))
+        f.save(os.path.join(app.config['UPLOAD_FOLDERR'], f.filename))
+      
        
       
     
@@ -253,13 +262,13 @@ def dashboards():
    
         try:
             doc = Document()
-            with open(f.filename, 'r') as file:
+            with open('static/resumes/'+f.filename, 'r') as file:
                 doc.add_paragraph(file.read())
                 doc.save("text.docx")
                 data = ResumeParser('text.docx').get_extracted_data()
 
         except:
-            data = ResumeParser(f.filename).get_extracted_data()
+            data = ResumeParser('static/resumes/'+f.filename).get_extracted_data()
 
         cleaned_data = {x.replace('_', ' '): v
                         for x, v in data.items()}
@@ -328,7 +337,7 @@ def dashboards():
         
         ccuser = Cv.query.filter_by(cvemail=cvmail).first() or Cv.query.filter_by(username=name).first()
         if not ccuser:
-            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber,degree=degree, skills=skillss,experience=experience)
+            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber,degree=degree, skills=skillss,experience=experience,file=f.filename)
             db.session.add(cvuser)
             db.session.commit()
             flash('File uploaded Successfully')
@@ -339,12 +348,16 @@ def dashboards():
         cleaned = clean_text(data)
         prediction = rf_clf.predict([cleaned])
         result = prediction[0]
-
-        return render_template('Myprofile.html', name=current_user.username, res_content=datas, pred=result)
-   
-    
-
+        cvs = Cv.query.all()
        
+
+        return render_template('Myprofile.html', name=current_user.username, res_content=datas, pred=result, cvs=cvs)
+   
+@app.route('/Myprofile', methods=['GET', 'POST'])
+def delete():
+    Cv.query.filter(Cv.username == current_user.username).delete()
+    return render_template('Myprofile.html')
+   
 
 
 @app.route('/logout')
@@ -353,7 +366,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/profile/<username>')
+@app.route('/profile/<username>') 
 def pro(username):
     username="nuwan"
    
@@ -363,7 +376,7 @@ def pro(username):
 def cprofile():
     return render_template('cprofile.html')
 
-ROWS_PER_PAGE = 4
+ROWS_PER_PAGE = 50
 @app.route('/profiles')
 def profiles():
     users = User.query.all()
@@ -703,7 +716,6 @@ def messages():
         messages=messages
         )
 
-    
 if __name__ == '__main__':
     #app.run('0.0.0.0', port=(os.environ.get("PORT", 5000)))
      app.run(debug=True)
