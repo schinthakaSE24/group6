@@ -46,6 +46,7 @@
             <img src="static\img\recruitment(2).png" width="45px" height="45px">
             </div>
            <ul class="navbar-nav main">
+            {% if current_user.is_authenticated %}
               <li class="nav-item">
                 
                  <a href="{{ url_for('index') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
@@ -69,12 +70,25 @@
           </svg><br>Profiles</a>
         </li>
         <li class="nav-item">
+          <a href="{{ url_for('interview') }}" class="nav-link "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+          
+        </svg><br>Technical-Interview</a>
+        </li>
+        {% if current_user.usertype == 'Admin' or current_user.usertype == 'Employer_Company' %}
+          <li class="nav-item">
+            <a href="{{ url_for('cv') }}" class="nav-link "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+              
+          </svg><br>Ranking</a>
+          </li>
+
+       {% endif %}
+        <li class="nav-item">
           <a href="{{ url_for('logout') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
          </svg><br>Logout</a>
        </li>
-      
+      {% endif %}
 
        </ul>
            
@@ -154,6 +168,55 @@
   <ul id="myUl">
  
     {% for user in users.items %}
+<<<<<<< HEAD
+    {% if user.usertype == "Job_Applicant" %}
+     <div class="row g-0" style="margin-left:30px;">
+                <div class="col"
+                  style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                  <img src="static\profilepic\{{user.image_file}}  "
+                    alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
+                  <h5>Username: {{user.username}}</h5>
+                 
+                  <p>Web Designer</p>
+                  
+                <a href="{{url_for('profileupdate')}}">  <i class="far fa-edit mb-5"></i></a>
+                </div>
+                <div class="col-md-8" style="margin-right:40px;">
+                  <div class="card-body p-4">
+                    <h6>user information</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                      <div class="col-6 mb-3" style="padding-bottom:5px;">
+                        <h6>Email</h6>
+                        <p class="text-muted">{{user.email}}</p>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>User ID</h6>
+                        <p class="text-muted">{{user.id}}</p>
+                      </div>
+                    </div>
+                    <h6>Projects</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                      <div class="col-6 mb-3">
+                        <h6>Recent</h6>
+                        <button class="btn btn-primary">Go</button>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>Most Viewed</h6>
+                        <button class="btn btn-primary">Go</button>
+                      <p>Last seen on</p>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                      <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
+                      <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
+                      <a href="{{url_for('view', username=user.username)}}">View more</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+=======
    
     {% if user.usertype=="user as applicant" %}
     <li>
@@ -175,6 +238,7 @@
                       
       </div>
     </li>
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
             
      {% endif %}     
         
