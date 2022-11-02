@@ -114,6 +114,7 @@ class User(UserMixin, db.Model):
 
 class Cv(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+<<<<<<< HEAD
     username = db.Column(db.String(150), unique=True)
     cvemail = db.Column(db.String(150), unique=True)
     cvname = db.Column(db.String(50), unique=True)
@@ -122,6 +123,23 @@ class Cv(UserMixin, db.Model):
     degree = db.Column(db.String(), unique=True)
     experience = db.Column(db.String(), unique=True)
 
+=======
+    username= db.Column(db.String(150),unique=True)
+    cvemail = db.Column(db.String(150),unique=True)
+    cvname = db.Column(db.String(50),unique=True)
+    phonenumber = db.Column(db.String(14),unique=True)
+    skills = db.Column(db.String(),unique=True)
+    degree = db.Column(db.String(),unique=True)
+    experience =db.Column(db.String(),unique=True)
+    file = db.Column(db.String(150),unique=True)
+    
+class Company(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    companyname = db.Column(db.String(50),unique=True)
+    companyemail = db.Column(db.String(50),unique=True)
+    password = db.Column(db.String(80))
+   
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -303,25 +321,43 @@ def dashboard():
     return render_template('dashboard.html', name=current_user.username)
 
 
+<<<<<<< HEAD
 UPLOAD_CV = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'files/cv/')
 
 
+=======
+
+UPLOAD_FOLDERR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/resumes/')
+app.config['UPLOAD_FOLDERR'] = UPLOAD_FOLDERR
+if not os.path.isdir(UPLOAD_FOLDERR):
+    os.mkdir(UPLOAD_FOLDERR)
+
+UPLOAD_CV = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/resumes/')
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
 @app.route('/uploader', methods=['GET', 'POST'])
 def dashboards():
     if request.method == 'POST':
         f = request.files['file']
+<<<<<<< HEAD
         f.save(secure_filename(f.filename))
+=======
+        f.save(os.path.join(app.config['UPLOAD_FOLDERR'], f.filename))
+      
+       
+      
+    
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
 
         try:
             doc = Document()
-            with open(f.filename, 'r') as file:
+            with open('static/resumes/'+f.filename, 'r') as file:
                 doc.add_paragraph(file.read())
                 doc.save("text.docx")
                 data = ResumeParser('text.docx').get_extracted_data()
 
         except:
-            data = ResumeParser(f.filename).get_extracted_data()
+            data = ResumeParser('static/resumes/'+f.filename).get_extracted_data()
 
         cleaned_data = {x.replace('_', ' '): v
                         for x, v in data.items()}
@@ -391,8 +427,12 @@ def dashboards():
         ccuser = Cv.query.filter_by(cvemail=cvmail).first(
         ) or Cv.query.filter_by(username=name).first()
         if not ccuser:
+<<<<<<< HEAD
             cvuser = Cv(username=name, cvemail=cvmail, cvname=cvapplicant_name,
                         phonenumber=phonenumber, degree=degree, skills=skillss, experience=experience)
+=======
+            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber,degree=degree, skills=skillss,experience=experience,file=f.filename)
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
             db.session.add(cvuser)
             db.session.commit()
             flash('File uploaded Successfully')
@@ -403,8 +443,20 @@ def dashboards():
         cleaned = clean_text(data)
         prediction = rf_clf.predict([cleaned])
         result = prediction[0]
+        cvs = Cv.query.all()
+       
 
+<<<<<<< HEAD
         return render_template('Myprofile.html', name=current_user.username, res_content=datas, pred=result)
+=======
+        return render_template('Myprofile.html', name=current_user.username, res_content=datas, pred=result, cvs=cvs)
+   
+@app.route('/Myprofile', methods=['GET', 'POST'])
+def delete():
+    Cv.query.filter(Cv.username == current_user.username).delete()
+    return render_template('Myprofile.html')
+   
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
 
 
 @app.route('/logout')
@@ -413,8 +465,12 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+<<<<<<< HEAD
 
 @app.route('/profile/<username>')
+=======
+@app.route('/profile/<username>') 
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
 def pro(username):
     username = "nuwan"
 
@@ -425,10 +481,14 @@ def pro(username):
 def cprofile():
     return render_template('cprofile.html')
 
+<<<<<<< HEAD
 
 ROWS_PER_PAGE = 4
 
 
+=======
+ROWS_PER_PAGE = 50
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
 @app.route('/profiles')
 def profiles():
     users = User.query.all()

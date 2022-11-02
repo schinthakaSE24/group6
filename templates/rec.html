@@ -75,8 +75,9 @@ profile page
   </nav>
 </header>
 
-<div class="split right">
+<div class="splitr">
     {% for user in users%}
+<<<<<<< HEAD
      {% if user.usertype=="Employer_Company"%}
      <div class="row g-0" style="margin-left:30px;">
         <div class="col"
@@ -122,36 +123,54 @@ profile page
               <a href="{{url_for('view', username=user.username)}}">View more</a>
             </div>
           </div>
-        </div>
+=======
+     {% if user.usertype=="user as recruiter"%}
+     <div class="card">
+      <div class="card-header">
+        recruiter details
       </div>
+      <div class="card-body">
+        <div class="split right">
+        <img src="static\profilepic\{{user.image_file}}  "
+            alt="Avatar" class="img-fluid my-5" style="width: 100px; align-items: center;" />
+            <p>Web Designer</p>
+        <a href="{{url_for('profileupdate')}}" class="btn btn-primary" style="margin-top:20px;">change profile</a>
+        <hr>
+>>>>>>> f5189f406fb77d90b5abb0f93db99e7ba887ccab
+        </div>
+        <div class="splitl">
+          <h5>Username: {{user.username}}</h5>
+          <p class="text-muted">{{user.email}}</p>
+          <p class="text-muted">{{user.id}}</p>   
+          <a href="{{url_for('cv')}}" class="btn btn-primary" style="margin-left:750px;">check resume further</a>
+       
+      </div>
+      </div>
+    </div>
     
-    
+       
+     
      {% endif %}
     {% endfor %}
-</div>
+
 
 <style>
-.split{
-margin-top: 100px;
-height: 100%;
-width: 75%;
-position: fixed;
-z-index: 1;
-top: 0;
-overflow-x: hidden;
-padding-top: 10px;
-}
-.left {
-left: 0;
-background-color: rgb(238, 238, 238);
-}
+  .splitr{
+    margin-top: 100px;
+    height: 100px;
+    width:100%;
+    padding-top:20px;
 
-.right {
-right: 0;
-background-color: #ffffff
-}
-
+  }
+  .splitl{
+    margin-top: 100px;
+    margin-left: 300px;
+    margin-top: -190px;
+  }
 </style>
+</div>
+
+
 
 {% endblock content%}
 
