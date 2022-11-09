@@ -119,6 +119,7 @@ class Cv(UserMixin, db.Model):
     degree = db.Column(db.String(),unique=True)
     experience =db.Column(db.String(),unique=True)
     file = db.Column(db.String(150),unique=True)
+    predicted = db.Column(db.String(),unique=True)
     
 class Company(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -334,21 +335,22 @@ def dashboards():
         degree = data.get("degree")
         experience = data.get("total_experience")
         skillss = ','.join(map(str,skills))
+        data = str(data)
+        cleaned = clean_text(data)
+        prediction = rf_clf.predict([cleaned])
+        result = prediction[0]
+        cvs = Cv.query.all()
         
         ccuser = Cv.query.filter_by(cvemail=cvmail).first() or Cv.query.filter_by(username=name).first()
         if not ccuser:
-            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber,degree=degree, skills=skillss,experience=experience,file=f.filename)
+            cvuser = Cv( username=name,cvemail=cvmail,cvname=cvapplicant_name,phonenumber=phonenumber,degree=degree, skills=skillss,experience=experience,file=f.filename,predicted=result)
             db.session.add(cvuser)
             db.session.commit()
             flash('File uploaded Successfully')
         else:
             flash("File Already uploaded one,Try again later")
         
-        data = str(data)
-        cleaned = clean_text(data)
-        prediction = rf_clf.predict([cleaned])
-        result = prediction[0]
-        cvs = Cv.query.all()
+       
        
 
         return render_template('Myprofile.html', name=current_user.username, res_content=datas, pred=result, cvs=cvs)
