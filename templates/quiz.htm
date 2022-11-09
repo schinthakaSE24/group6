@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% include 'navbar.htm' %}
+
+{% block content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endfor %}
+
+    <h3> Dashboard </h3>
+
+    <!-- if logged-in, we can use flask current_user.<column name> feature to access values -->
+    <!--https://getbootstrap.com/docs/5.1/components/card/-->
+    <div class="card">
+      <div class="card-header">
+          Welcome {{  current_user.username }} !
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"> Your user profile </h5>
+        <p class="card-text">
+           
+            <strong>Username      :</strong> {{ current_user.username }}<br/>
+            <strong>User ID       :</strong> {{ current_user.id }}<br/>
+            <strong>Email         :</strong> {{ current_user.email }}<br/>
+            <strong>Role          :</strong> {{ current_user.usertype }}<br/>
+      
+        </p>
+        
+        <a href="{{ url_for('logout') }}" class="btn btn-secondary bt-small">Logout</a>
+      </div>
+    </div>
+     <br/><br/>
+
+     {% if current_user.usertype == 'Admin'%}
+        <a href="{{ url_for('signup') }}" class="btn btn-secondary bt-small">Add User</a>
+        <br/><br/>
+        <h4>Existing Users List:</h4>
+        <!--- https://getbootstrap.com/ -> content -> Tables --->
+        <table class="table table-hover table-bordered table-striped">
+        {% for user in users %}
+            <tr>
+                <td>{{user.id}} : <a href="{{url_for('update', id=our_user.id)}}">{{user.username}}</a>
+                    - {{user.username}}
+                    - {{user.email}}
+                    - {{user.role}}
+                    - <a href="{{url_for('delete', id=user.id)}}">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+     {% endif %}
+
+{% endblock %}
