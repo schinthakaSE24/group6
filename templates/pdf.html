@@ -28,6 +28,9 @@ profile page
     }
  </style>
 <header class="header-content">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
   <nav class="navbar navbar-expand-lg navbar-light">
      <div class="container">
       <a class="navbar-brand logo" href="#">Employee recruiter</a>
@@ -78,7 +81,7 @@ profile page
                  
                   <div class="mt-3">
                     <h4>{{user.username}}</h4>
-                    <p class="text-secondary mb-1">Full Stack Developer</p>
+                    <p class="text-secondary mb-1">{{cuser.predicted}}</p>
                   
                     {% if user != current_user %}
                       <p>
@@ -178,6 +181,9 @@ profile page
                     <div class="mb-3" style="height: 5px">
                       {{cuser.skills}}
                     </div>
+                    <br>
+                    <br>
+                    <br>
                     <br>
                     <br>
                     <br>

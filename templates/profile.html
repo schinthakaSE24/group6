@@ -29,6 +29,11 @@
  <!-- Example split danger button -->
 
 <header class="header-content">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <nav class="navbar navbar-expand-lg navbar-light">
    
      <div class="container">
@@ -45,7 +50,7 @@
             <img src="static\img\recruitment(1).png" width="45px" height="45px">
             <img src="static\img\recruitment(2).png" width="45px" height="45px">
             </div>
-           <ul class="navbar-nav main">
+           <ul class="navbar-nav main" style="margin-left:200px ;">
               <li class="nav-item">
                 
                  <a href="{{ url_for('index') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
@@ -54,21 +59,21 @@
               </li>
            
               
-              <li class="nav-item">
+              <li class="nav-item" style="margin-left:10px;">
                <a href="{{ url_for('Myprofile') }}" class="nav-link "><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
               </svg><br>MyProfile</a>
             </li>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" style="margin-left:30px;">
            <a href="{{ url_for('profiles') }}" class="nav-link active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
             <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
             <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
           </svg><br>Profiles</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="margin-left: 350px;">
           <a href="{{ url_for('logout') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
@@ -90,10 +95,94 @@
     
    
     <h4>find user here more</h4>
+    <form method="post" action="/profiles" style="padding:10px;">
+      <labal>HR</labal>
+      <input type="checkbox" name="hello1" value="HR" checked>
+      <label>Data Science</label>
+      <input type="checkbox" name="hello2" value="Data Science" checked> <br>
+      <labal>Developer</labal>
+      <input type="checkbox" name="hello1" value="HR" checked>
+      <label>Data Science</label>
+      <input type="checkbox" name="hello2" value="Data Science" checked> <br>
+      <labal>HR</labal>
+      <input type="checkbox" name="hello1" value="HR" checked>
+      <label>Data Science</label>
+      <input type="checkbox" name="hello2" value="Data Science" checked> <br>
+     
+     
+      </form>
+<br>
+<div class="container">
+  <div class="row">
+  <br />
+
+ <h4>experienced user selection</h4>
+  <br />
+      <div class="col-md-3">                                
+          <div class="list-group">
+           
+              <input type="hidden" id="hidden_minimum_price" value="0" />
+              <input type="hidden" id="hidden_maximum_price" value="20" />
+              <p id="price_show">0 - 20</p>
+              <div id="price_range"></div>
+          </div>                
+      </div>
+      <div class="col-md-9">
+         <div class="row filter_data">
+      </div>
+  </div>
+  </div>
+</div>
+<style>
+#loading
+{
+  text-align:center; 
+  background: url('images/loading.gif') no-repeat center; 
+  height: 150px;
+}
+</style>
+<script>
+$(document).ready(function(){
+  filter_data();
+  function filter_data()
+  {
+      $('.filter_data').html('<div id="loading" style="" ></div>');
+      var action = 'fetch_data';
+      var minimum_price = $('#hidden_minimum_price').val();
+      var maximum_price = $('#hidden_maximum_price').val();
+      $.ajax({
+          url:"/fetchrecords",
+          method:"POST",
+          data:{action:action, minimum_price:minimum_price, maximum_price:maximum_price},
+          success:function(data){
+              $('.filter_data').html(data);
+              $(".filter_data").append(data.htmlresponse);
+          }
+      });
+  }
+  $('#price_range').slider({
+      range:true,
+      min:0,
+      max:20,
+      values:[0, 20],
+      step:1,
+      stop:function(event, ui)
+      {
+          $('#price_show').html(ui.values[0] + ' - ' + ui.values[1]);
+          $('#hidden_minimum_price').val(ui.values[0]);
+          $('#hidden_maximum_price').val(ui.values[1]);
+          filter_data();
+      }
+  });
+});
+</script>
+{%for user1 in list%}
+<strong><a href="{{url_for('view', username=user1.username)}}">{{user1}}<br></a></strong>
 
 
+{%endfor%}
 
-  
+
   <style>
   * {
     box-sizing: border-box;
@@ -162,7 +251,7 @@
       <b><a href="{{url_for('view', username=user.username)}}">{{user.username}}</a></b>
         <img src="static\profilepic\{{user.image_file}}  "
       alt="Avatar" class="img-fluid my-5" style="width: 150px; align-items: center;" />
-      <div class="de" style="margin-left:200px; padding:20px ; margin-top:-200px;"> 
+      <div class="de" style="margin-left:200px; padding:20px ; margin-top:-220px;"> 
          <b>full name:</b> <br>
         <b>email adress:</b> {{user.email}}<br>
         <b>conatct details:</b><br>
@@ -170,7 +259,7 @@
       </div> 
       <div class="me" style="margin-left:800px; margin-top: -100px;"> <button><a href="{{url_for('send_message', recipient=user.username)}}">send message</a></button></div>
     
-        <p>Web Designer</p>
+       
         <hr>
                       
       </div>

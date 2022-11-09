@@ -1,0 +1,14 @@
+{% for row in frameworklist %}  
+<div class="row">
+    <div class="col-md-2" align="right">
+        <label>{{row.name}}</label>
+    </div>
+    <div class="col-md-10">
+        <div class="progress">
+            <div class="progress-bar {{row.progress_bar_class}}" role="progressbar" aria-valuenow="{{row.percentage_vote}}" aria-valuemin="0" aria-valuemax="100" style="width:{{row.percentage_vote}}%">
+                {{row.percentage_vote}} % 
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %} 

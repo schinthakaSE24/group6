@@ -19,7 +19,7 @@ from tkinter.tix import Form
 from tokenize import String
 from turtle import width
 from unittest import result
-from flask import Flask, render_template, redirect, url_for, request,send_file,session
+from flask import Flask, jsonify, render_template, redirect, url_for, request,send_file,session
 from flask_bootstrap import Bootstrap
 from flask import flash
 import unicodedata
@@ -27,7 +27,7 @@ import pandas as pd
 import string
 import os
 from flask_wtf import FlaskForm
-from sqlalchemy import false, true
+from sqlalchemy import false, table, true
 from wtforms import StringField, PasswordField, BooleanField,FileField,SubmitField,RadioField
 from wtforms.validators import InputRequired, Email, Length,DataRequired, ValidationError
 from flask_wtf.file import FileField, FileAllowed
@@ -50,6 +50,10 @@ from extract_entities import get_number, get_email, rm_email, rm_number, get_nam
 from model import simil
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_mail import Mail, Message
+from sqlalchemy import create_engine, MetaData,Table, Column, Numeric, Integer, VARCHAR
+from sqlalchemy.engine import result
+from flask import Flask, render_template, request, jsonify, flash, redirect
+from flask_mysqldb import MySQL,MySQLdb #pip install flask-mysqldb https://github.com/alexferl/flask-mysqldb
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
@@ -61,7 +65,14 @@ mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+#mysql conecting
 
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Root'
+app.config['MYSQL_DB'] = 'poolappdb'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+mysql = MySQL(app) 
 
 # Load the spacy library for text cleaning
 nlp = spacy.load('en_core_web_sm')
@@ -126,8 +137,9 @@ class Company(UserMixin, db.Model):
     companyname = db.Column(db.String(50),unique=True)
     companyemail = db.Column(db.String(50),unique=True)
     password = db.Column(db.String(80))
-   
 
+
+   
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -177,11 +189,68 @@ class RegisterFormc(FlaskForm):
     companyname = StringField("companyname:",validators=[InputRequired()])
     companyemail = StringField('companyemail:',validators=[InputRequired()])
     password = PasswordField('Password:')
+from sqlalchemy import Table, func
 
-@app.route('/')
+@app.route('/',methods=['GET', 'POST'])
 def index():
+  
+    cursor = mysql.connection.cursor()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute("SELECT * FROM tblprogramming ORDER BY id ASC")
+    webframework = cur.fetchall()  
+    
    
-    return render_template('index.html')
+ 
+    return render_template('index.html', webframework= webframework)
+   
+   
+@app.route("/polldata",methods=["POST","GET"])
+def polldata():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)  
+    query = "SELECT * from tbl_poll"
+    cur.execute(query)
+    total_poll_row = int(cur.rowcount) 
+    cur.execute("SELECT * FROM tblprogramming ORDER BY id ASC")
+    framework = cur.fetchall()  
+    frameworkArray = []
+    for row in framework:
+        get_title = row['title']
+        cur.execute("SELECT * FROM tbl_poll WHERE web_framework = %s", [get_title])
+        row_poll = cur.fetchone()  
+        total_row = cur.rowcount
+        #print(total_row)
+        percentage_vote = round((total_row/total_poll_row)*100)
+        print(percentage_vote)
+        if percentage_vote >= 40:
+            progress_bar_class = 'progress-bar-success'
+        elif percentage_vote >= 25 and percentage_vote < 40:   
+            progress_bar_class = 'progress-bar-info'  
+        elif percentage_vote >= 10 and percentage_vote < 25:
+            progress_bar_class = 'progress-bar-warning'
+        else:
+            progress_bar_class = 'progress-bar-danger'
+  
+        frameworkObj = {
+                'id': row['id'],
+                'name': row['title'],
+                'percentage_vote': percentage_vote,
+                'progress_bar_class': progress_bar_class}
+        frameworkArray.append(frameworkObj)
+    return jsonify({'htmlresponse': render_template('response.html', frameworklist=frameworkArray)})
+ 
+@app.route("/insert",methods=["POST","GET"])
+def insert():
+    cursor = mysql.connection.cursor()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    if request.method == 'POST':
+        poll_option = request.form['poll_option']
+        print(poll_option)      
+        cur.execute("INSERT INTO tbl_poll (web_framework) VALUES (%s)",[poll_option])
+        mysql.connection.commit()       
+        cur.close()
+        msg = 'success' 
+    return jsonify(msg)
+ 
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -355,11 +424,7 @@ def dashboards():
 
         return render_template('Myprofile.html', name=current_user.username, res_content=datas, pred=result, cvs=cvs)
    
-@app.route('/Myprofile', methods=['GET', 'POST'])
-def delete():
-    Cv.query.filter(Cv.username == current_user.username).delete()
-    return render_template('Myprofile.html')
-   
+
 
 
 @app.route('/logout')
@@ -379,17 +444,31 @@ def cprofile():
     return render_template('cprofile.html')
 
 ROWS_PER_PAGE = 50
+
+
 @app.route('/profiles')
 def profiles():
     users = User.query.all()
- 
-
+    cuser= Cv.query.all()
+   
 
    
     page = request.args.get('page', 1, type=int)
 
     users = User.query.paginate(page=page, per_page=ROWS_PER_PAGE) 
     
+    if request.method == 'POST':
+        query = request.form['action']
+        minimum_price = request.form['minimum_price']
+        maximum_price = request.form['maximum_price']
+        #print(query)
+        if query == '':
+            list = cuser
+            print(list)
+        else:
+            print("hello")
+
+
     return render_template('profile.html',users=users)
 
 
@@ -693,7 +772,6 @@ def send_message(recipient):
             recipient_id=user.id,
             body=form.message.data)
         db.session.add(msg)
-       
         db.session.commit()
         flash('Your message has been sent.')
         return redirect(url_for('profiles', username=recipient))
@@ -717,6 +795,16 @@ def messages():
         'messages.html',
         messages=messages
         )
+@app.route('/profile', methods=['GET', 'POST'])
+def filter():
+    if request.method == 'POST':
+       
+        
+        option1=request.form.get('hello1')
+        option2=request.form.get('hello2')
+       
+        
+    return render_template('profile.html',)
 
 if __name__ == '__main__':
     #app.run('0.0.0.0', port=(os.environ.get("PORT", 5000)))

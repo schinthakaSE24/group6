@@ -8,7 +8,10 @@ Welcome to CV Screener App
 {% block content %}
 
 <header class="header-content">
-  <nav class="navbar navbar-expand-lg navbar-light">
+   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+  <nav class="navbar navbar-expand-lg navbar-light" >
      <div class="container">
       <a class="navbar-brand logo" href="{{ url_for('index') }}">Employee recruiter</a>
        <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="25" height="24" class="nav-logo"> -->
@@ -16,13 +19,11 @@ Welcome to CV Screener App
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-           <ul class="navbar-nav main">
+           <ul class="navbar-nav main" style="margin-left:400px;">
               <li class="nav-item">
                  <a href="{{ url_for('index') }}" class="nav-link active">Home</a>
               </li>
-              <li class="nav-item">
-                 <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-              </li>
+              
               <li class="nav-item">
                  <a href="{{ url_for('signup') }}" class="nav-link">Register</a>
               </li>
@@ -31,6 +32,9 @@ Welcome to CV Screener App
             </li>
             <li class="nav-item">
                <a href="{{ url_for('rview') }}" class="nav-link">recruiters</a>
+            </li>
+            <li class="nav-item" >
+               <a href="{{ url_for('login') }}" class="nav-link">Login</a>
             </li>
            </ul>
         </div>
@@ -64,6 +68,88 @@ Welcome to CV Screener App
     </div>
   </div>
 </section>
+
+<div class="container">  
+   <br />  <br />
+   <h2 align="center">Give your valuble feedbacks for us</h2><br />
+   <div class="row">
+       <div class="col-md-6">
+           <form method="post" id="poll_form">
+             
+            
+               <br />
+               {% for row in webframework %}
+               <div class="radio">
+                   <label><h4><input type="radio" name="poll_option" class="poll_option" value="{{row.title}}" /> {{row.title}}</h4></label>
+               </div>
+               {% endfor %}
+               <br />
+               <input type="submit" name="poll_button" id="poll_button" class="btn btn-primary" />
+           </form>
+           <br />
+       </div>
+       <div class="col-md-6">
+         <br />
+         <br />
+         <h4>Summary of feedbacks</h4><br />
+         <div id="poll_result"></div>
+     </div>
+
+       </div>
+   </div>
+</div>
+<script>  
+
+$(document).ready(function(){
+fetch_poll_data();
+function fetch_poll_data()
+{ 
+var fetchall = 'all';
+var dataString = 'fetchall='+ fetchall;
+$.ajax({
+   url:"/polldata",
+   method:"POST",
+   data: dataString,
+   success:function(data)
+   {
+       $('#poll_result').html(data); 
+       $("#poll_result").append(data.htmlresponse);
+   }
+});
+}
+$('#poll_form').on('submit', function(event){
+event.preventDefault();
+var poll_option = '';
+$('.poll_option').each(function(){
+   if($(this).prop("checked"))
+   {
+       poll_option = $(this).val();
+   }
+});
+if(poll_option != '')
+{
+   $('#poll_button').attr('disabled', 'disabled');
+   var form_data = $(this).serialize();
+   $.ajax({
+       url:"/insert",
+       method:"POST",
+       data:form_data,
+       success:function()
+       {
+           $('#poll_form')[0].reset();
+           $('#poll_button').attr('disabled', false);
+           fetch_poll_data();
+           alert("Poll Submitted Successfully");
+       }
+   });
+}
+else
+{
+   alert("Please Select Option");
+}
+});
+});  
+</script>
 
 {% endblock %}
 
